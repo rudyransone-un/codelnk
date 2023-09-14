@@ -1,6 +1,6 @@
-import { Header } from './components/Header.tsx';
+import { Header } from '../components/Header.tsx';
 
-function App() {
+function Root() {
   return (
     <>
       <Header />
@@ -8,4 +8,4 @@ function App() {
   );
 }
 
-export default App;
+export default Root;

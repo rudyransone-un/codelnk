@@ -1,6 +1,8 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { Header } from '../components/Header.tsx';
 import { Link } from 'react-router-dom';
+
+import { Header } from '../components/Header.tsx';
+import { register } from '../api/user.ts';
 
 interface Values {
   email: string;
@@ -41,7 +43,9 @@ export function RegisterPage() {
           return errors;
         }}
         onSubmit={(values: Values) => {
-          console.log(values);
+          register(values).then((response) =>
+            console.log('response:register', response.data),
+          );
         }}
       >
         <div className="flex justify-center items-center h-screen">

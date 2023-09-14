@@ -5,7 +5,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 
-import App from './App.tsx';
+import Root from './pages/Root.tsx';
 import './index.css';
 import { UploadPage } from './pages/Upload.tsx';
 import { RegisterPage } from './pages/Register.tsx';
@@ -14,7 +14,7 @@ import { LoginPage } from './pages/Login.tsx';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <Root />,
   },
   {
     path: '/upload',
