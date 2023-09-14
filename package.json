@@ -1,0 +1,14 @@
+{
+  "name": "codelnk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pnpm --stream -r run start",
+    "start:dev": "pnpm --stream -r run start:dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
