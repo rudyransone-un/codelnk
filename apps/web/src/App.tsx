@@ -4,7 +4,6 @@ function App() {
   return (
     <>
       <Header />
-      <div className="font-sans text-2xl">Home</div>
     </>
   );
 }

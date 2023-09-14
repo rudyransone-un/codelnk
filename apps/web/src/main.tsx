@@ -8,6 +8,8 @@ import {
 import App from './App.tsx';
 import './index.css';
 import { UploadPage } from './pages/Upload.tsx';
+import { RegisterPage } from './pages/Register.tsx';
+import { LoginPage } from './pages/Login.tsx';
 
 const router = createBrowserRouter([
   {
@@ -15,8 +17,16 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path: 'upload',
+    path: '/upload',
     element: <UploadPage />,
+  },
+  {
+    path: '/login',
+    element: <LoginPage />,
+  },
+  {
+    path: '/register',
+    element: <RegisterPage />,
   },
 ]);
 
