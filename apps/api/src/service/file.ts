@@ -2,6 +2,7 @@ import { desc } from 'drizzle-orm';
 
 import { db } from '../db/db';
 import { files } from '../db/schema/file';
+import { users } from '../db/schema/user';
 import type { File, FileInsert } from '../db/schema/file';
 
 export async function getLastCreatedFile() {
@@ -18,7 +19,7 @@ export async function getLastCreatedFile() {
 
 export async function uploadFile(file: FileInsert) {
   try {
-    await db.insert(files).values(file).run();
+    await db.insert(files).values({ userId: 1, ...file });
   } catch (e) {
     console.error(e);
   }

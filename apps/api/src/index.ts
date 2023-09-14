@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import express from 'express';
+import session from 'express-session';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import multer from 'multer';
@@ -13,6 +14,7 @@ import {
   getFiles,
   getLastCreatedFile,
 } from './service/file';
+import { router as UserController } from './controllers/user';
 
 const PORT = 3000;
 const UPLOADS_DIR = path.resolve(process.cwd(), 'uploads');
@@ -36,8 +38,17 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+app.use(
+  session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true,
+  }),
+);
 app.use(cors());
 app.use(bodyParser.json());
+
+app.use('/api/v1/users', UserController);
 
 app.get('/test', (_, res) => {
   res.status(200).json({ ping: 'pong' });
