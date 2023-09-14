@@ -1,15 +1,18 @@
 import React from 'react';
 import { IconFileTypeJpg } from '@tabler/icons-react';
+import { FileResponse } from '../types/FileResponse.ts';
 
 interface FilesBrowseProps {
-  files: Array<string>;
+  files: Array<FileResponse>;
+  filesCount: number;
+  lastFile: FileResponse | undefined;
 }
 
 const FileItem = ({
   file,
   fileLink,
 }: {
-  file: string;
+  file: FileResponse;
   fileLink: string;
 }) => {
   return (
@@ -22,35 +25,50 @@ const FileItem = ({
         />
         <div className="font-sans">
           <a className="underline" href={fileLink}>
-            {file}
+            {file.filename}
           </a>
         </div>
       </div>
-      <div>{new Date().toDateString()}</div>
+      <div>{file.timestamp}</div>
     </div>
   );
 };
 
-const FileList: React.FC<FilesBrowseProps> = ({ files }) => {
+const FileList: React.FC<FilesBrowseProps> = ({
+  files,
+  filesCount,
+  lastFile,
+}) => {
   return (
     <>
-      <div className="w-full h-[30px] bg-gray-300"></div>
+      <div className="w-full h-[40px] bg-gray-300 text-gray-800 flex items-center justify-between px-2 font-sans text-md">
+        <div>Files - {filesCount}</div>
+        <div>Last uploaded File - {lastFile?.timestamp}</div>
+      </div>
       {files &&
-        files.map((file, index) => (
+        files.map((file) => (
           <FileItem
             file={file}
-            fileLink={`http://localhost:3000/file/${file}`}
-            key={`file-${index}`}
+            fileLink={`http://localhost:3000/file/${file.filename}`}
+            key={file.id}
           />
         ))}
     </>
   );
 };
 
-export function FilesBrowse({ files }: FilesBrowseProps) {
+export function FilesBrowse({
+  files,
+  filesCount,
+  lastFile,
+}: FilesBrowseProps) {
   return (
-    <div className="w-[800px] bg-gray-200 rounded-sm p-1">
-      <FileList files={files} />
+    <div className="w-[800px] bg-gray-200 rounded-sm p-1 space-y-1">
+      <FileList
+        files={files}
+        filesCount={filesCount}
+        lastFile={lastFile}
+      />
     </div>
   );
 }

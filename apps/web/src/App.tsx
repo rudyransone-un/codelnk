@@ -1,38 +1,63 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { InputCopy, FilesBrowse } from './components';
+import { FileResponse } from './types/FileResponse.ts';
+
 import './index.css';
 
 interface SelectFileProps {
-  file: File | undefined;
+  file: File | undefined | null;
   handleFileChange(e: React.ChangeEvent<HTMLInputElement>): void;
+  clearFileChange(): void;
 }
 
-const SelectFile = ({ file, handleFileChange }: SelectFileProps) => {
+const SelectFile = ({
+  file,
+  handleFileChange,
+  clearFileChange,
+}: SelectFileProps) => {
   return (
     <div className="flex flex-col justify-center">
       <input type="file" onChange={handleFileChange} />
-      <div className="font-sans">
-        {file && `${file.name} - ${file.type}`}
+      <div className="font-sans flex items-center space-x-1">
+        {file && (
+          <div>
+            {file.name} - {file.type}
+          </div>
+        )}
+        {file && (
+          <button
+            onClick={clearFileChange}
+            className="font-sans underline text-red-400"
+          >
+            Delete
+          </button>
+        )}
       </div>
     </div>
   );
 };
 
 interface UploadFileProps {
-  file: File | undefined;
+  file: File | null | undefined;
   uploadFile(): void;
   handleFileChange(e: React.ChangeEvent<HTMLInputElement>): void;
+  clearFileChange(): void;
 }
 
 const UploadFile = ({
   file,
   handleFileChange,
   uploadFile,
+  clearFileChange,
 }: UploadFileProps) => {
   return (
     <div className="flex items-center space-x-2">
-      <SelectFile file={file} handleFileChange={handleFileChange} />
+      <SelectFile
+        file={file}
+        handleFileChange={handleFileChange}
+        clearFileChange={clearFileChange}
+      />
       <button
         className="bg-teal-100 w-[120px] h-[35px]"
         onClick={uploadFile}
@@ -44,13 +69,22 @@ const UploadFile = ({
 };
 
 function App() {
-  const [file, setFile] = useState<File>();
-  const [files, setFiles] = useState<Array<string> | null>(null);
+  const [lastFile, setLastFile] = useState<FileResponse>();
+  const [file, setFile] = useState<File | null>();
+  const [files, setFiles] = useState<Array<FileResponse> | null>(
+    null,
+  );
+  const [filesCount, setFilesCount] = useState<number>(0);
   const [fileLink, setFileLink] = useState<string>('');
 
   useEffect(() => {
     axios.get('http://localhost:3000/files').then((response) => {
       setFiles(response.data.files);
+      setFilesCount(response.data.count);
+    });
+
+    axios.get('http://localhost:3000/file/last').then((response) => {
+      setLastFile(response.data.file[0]);
     });
   });
 
@@ -88,6 +122,10 @@ function App() {
     setFileLink(e.target.value);
   };
 
+  const clearFileChange = () => {
+    setFile(null);
+  };
+
   return (
     <>
       <div className="container mx-auto h-screen flex justify-center items-center">
@@ -96,12 +134,19 @@ function App() {
             file={file}
             handleFileChange={handleFileChange}
             uploadFile={uploadFile}
+            clearFileChange={clearFileChange}
           />
           <InputCopy
             fileLink={fileLink}
             onChangeFile={onChangeFile}
           />
-          {files && <FilesBrowse files={files} />}
+          {files && (
+            <FilesBrowse
+              files={files}
+              filesCount={filesCount}
+              lastFile={lastFile}
+            />
+          )}
         </div>
       </div>
     </>
