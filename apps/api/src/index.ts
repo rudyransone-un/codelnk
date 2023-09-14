@@ -8,6 +8,12 @@ import multer from 'multer';
 import { nanoid } from 'nanoid';
 import mime from 'mime-types';
 
+import {
+  uploadFile,
+  getFiles,
+  getLastCreatedFile,
+} from './service/file';
+
 const PORT = 3000;
 const UPLOADS_DIR = path.resolve(process.cwd(), 'uploads');
 
@@ -37,6 +43,12 @@ app.get('/test', (_, res) => {
   res.status(200).json({ ping: 'pong' });
 });
 
+app.get('/file/last', async (req, res) => {
+  const file = await getLastCreatedFile();
+
+  res.json({ file });
+});
+
 app.get('/file/:filename', (req, res) => {
   const filePath = `${UPLOADS_DIR}/${req.params.filename}`;
 
@@ -46,16 +58,27 @@ app.get('/file/:filename', (req, res) => {
   res.sendFile(filePath);
 });
 
-app.get('/files', (req, res) => {
-  const files = fs.readdirSync(UPLOADS_DIR);
+app.get('/files', async (req, res) => {
+  // const files = fs.readdirSync(UPLOADS_DIR);
+  const files = await getFiles();
 
-  res.json({ files });
+  if (!files) return res.json({ message: 'files empty' });
+
+  res.json({ files, count: files.length });
 });
 
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/upload', upload.single('file'), async (req, res) => {
   // console.log('#INFO', req.file);
   const fileLink =
     req.file && `http://localhost:3000/file/${req.file.filename}`;
+
+  if (!req.file) return res.json({ error: 'Filed upload file' });
+
+  await uploadFile({
+    filename: req.file.filename,
+    filetype: mime.extension(req.file.mimetype) as string,
+    size: req.file.size,
+  });
 
   res.status(200).json({ message: 'file uploaded', link: fileLink });
 });
