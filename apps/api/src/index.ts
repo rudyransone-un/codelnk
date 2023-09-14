@@ -59,7 +59,6 @@ app.get('/file/:filename', (req, res) => {
 });
 
 app.get('/files', async (req, res) => {
-  // const files = fs.readdirSync(UPLOADS_DIR);
   const files = await getFiles();
 
   if (!files) return res.json({ message: 'files empty' });
@@ -68,9 +67,8 @@ app.get('/files', async (req, res) => {
 });
 
 app.post('/upload', upload.single('file'), async (req, res) => {
-  // console.log('#INFO', req.file);
   const fileLink =
-    req.file && `http://localhost:3000/file/${req.file.filename}`;
+    req.file && `http://localhost:${PORT}/file/${req.file.filename}`;
 
   if (!req.file) return res.json({ error: 'Filed upload file' });
 
