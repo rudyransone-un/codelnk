@@ -6,7 +6,7 @@ import { tokens } from './token';
 
 export const users = sqliteTable('users', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  username: text('username').unique(),
+  username: text('username').unique().notNull(),
   email: text('email').unique().notNull(),
   password: text('password').notNull(),
   time: text('time').default(sql`CURRENT_TIME`),
