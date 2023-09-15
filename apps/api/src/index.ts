@@ -4,6 +4,7 @@ import path from 'node:path';
 import express from 'express';
 import session from 'express-session';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import multer from 'multer';
 import { nanoid } from 'nanoid';
@@ -47,6 +48,7 @@ app.use(
 );
 app.use(cors());
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use('/api/v1/users', UserController);
 
