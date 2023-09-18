@@ -23,7 +23,7 @@ export class TokenService {
     });
   }
 
-  async validate(token: string) {
+  validate(token: string) {
     try {
       return jwt.verify(token, this.config.JWT_SECRET_KEY);
     } catch (e) {

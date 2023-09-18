@@ -8,6 +8,10 @@ import { ConfigService } from '../service/config';
 import { tokens } from '../db/schema/token';
 import { eq } from 'drizzle-orm';
 import { users } from '../db/schema/user';
+import {
+  authorization,
+  AuthorizationRequest,
+} from '../middlewares/auth';
 
 export const router = express.Router();
 
@@ -87,3 +91,14 @@ router.post('/logout', async (req, res) => {
 
   res.json({ token });
 });
+
+router.get(
+  '/',
+  // @ts-ignore
+  authorization,
+  async (req: AuthorizationRequest, res) => {
+    const _users = db.select().from(users).all();
+
+    res.json({ message: 'ok' });
+  },
+);
